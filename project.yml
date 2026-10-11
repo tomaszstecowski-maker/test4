@@ -1,0 +1,45 @@
+name: STECOdbiornik
+options:
+  bundleIdPrefix: pl.stec
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+targets:
+  STECOdbiornik:
+    type: application
+    platform: iOS
+    sources:
+      - path: STECOdbiornik
+    info:
+      path: STECOdbiornik/Info.plist
+      properties:
+        CFBundleDisplayName: "S-TEC"
+        NSBonjourServices:
+          - _stec._tcp
+        NSLocalNetworkUsageDescription: "Potrzebne do odbioru przez Wi-Fi – S-TEC na komputerze znajdzie ten telefon w sieci domowej. / Needed to receive over Wi-Fi – S-TEC on your PC finds this phone on your home network."
+        NSPhotoLibraryAddUsageDescription: "S-TEC zapisuje w galerii zdjęcia i filmy przesłane z komputera. / S-TEC saves photos and videos sent from your PC to the gallery."
+        NSPhotoLibraryUsageDescription: "S-TEC dodaje przesłane zdjęcia i filmy do wybranego albumu. / S-TEC adds received photos and videos to the chosen album."
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      base:
+        PRODUCT_NAME: STECOdbiornik
+        PRODUCT_BUNDLE_IDENTIFIER: pl.stec.odbiornik
+        MARKETING_VERSION: "1.1"
+        CURRENT_PROJECT_VERSION: "2"
+        SWIFT_VERSION: "5.0"
+        SWIFT_STRICT_CONCURRENCY: minimal
+        TARGETED_DEVICE_FAMILY: "1"
+        IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+        GENERATE_INFOPLIST_FILE: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_CFBundleDisplayName: "S-TEC"
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
+        INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription: "S-TEC zapisuje w galerii zdjęcia i filmy przesłane z komputera. / S-TEC saves photos and videos sent from your PC to the gallery."
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "S-TEC dodaje przesłane zdjęcia i filmy do wybranego albumu. / S-TEC adds received photos and videos to the chosen album."
+        INFOPLIST_KEY_NSLocalNetworkUsageDescription: "Potrzebne tylko w trybie Wi-Fi – odbiór plików z programu S-TEC na komputerze. / Only for Wi-Fi mode – receiving files from S-TEC on your PC."
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_BITCODE: NO
