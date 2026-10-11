@@ -1,0 +1,58 @@
+# Buduje aplikację „S-TEC Odbiornik” (.ipa, niepodpisaną) na komputerze Apple w chmurze GitHub.
+# Działa też wtedy, gdy pliki zostały wgrane bez folderów. Instalacja: Sideloadly na Windows.
+name: Zbuduj S-TEC Odbiornik (iPhone)
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Uloz pliki w folderach
+        run: |
+          set -e
+          if [ ! -f ios/project.yml ]; then
+            mkdir -p ios/STECOdbiornik
+            mv project.yml ios/
+            mv ./*.swift ios/STECOdbiornik/
+          fi
+          A=ios/STECOdbiornik/Assets.xcassets
+          mkdir -p "$A/AppIcon.appiconset"
+          if [ ! -f "$A/AppIcon.appiconset/icon-1024.png" ]; then
+            cp "$(find . -name 'icon-1024.png' | head -n 1)" "$A/AppIcon.appiconset/icon-1024.png"
+          fi
+          printf '%s' '{"info":{"author":"xcode","version":1}}' > "$A/Contents.json"
+          printf '%s' '{"images":[{"filename":"icon-1024.png","idiom":"universal","platform":"ios","size":"1024x1024"}],"info":{"author":"xcode","version":1}}' > "$A/AppIcon.appiconset/Contents.json"
+          find ios -type f | sort
+
+      - name: Narzedzia
+        run: brew install xcodegen
+
+      - name: Projekt Xcode
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: Kompilacja
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild -project STECOdbiornik.xcodeproj -target STECOdbiornik -configuration Release \
+            -sdk iphoneos SYMROOT="$PWD/build" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build | tail -n 80
+
+      - name: Pakiet ipa
+        working-directory: ios
+        run: |
+          rm -rf Payload && mkdir Payload
+          cp -R build/Release-iphoneos/STECOdbiornik.app Payload/
+          zip -qry S-TEC-Odbiornik.ipa Payload
+          ls -la S-TEC-Odbiornik.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: S-TEC-Odbiornik-ipa
+          path: ios/S-TEC-Odbiornik.ipa
